@@ -1,0 +1,69 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Pedido #{{ pedido.id }}{% endblock %}
+
+{% block content %}
+
+<h1 class="h4 mb-4 text-gray-800">
+    Pedido #{{ pedido.id }} – {{ pedido.cliente }}
+</h1>
+
+<a href="{% url 'agregar_producto' pedido.id %}" class="btn btn-success mb-3">
+    ➕ Agregar productos
+</a>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            Detalle del pedido
+        </h6>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+    {% for d in detalles %}
+    <tr>
+        <td>{{ d.producto.nombre }}</td>
+        <td>${{ d.producto.precio }}</td>
+        <td class="text-center">{{ d.cantidad }}</td>
+        <td>${{ d.subtotal }}</td>
+        <td class="text-center">
+            <a href="{% url 'sumar_producto' d.id %}" class="btn btn-sm btn-success">+</a>
+            <a href="{% url 'restar_producto' d.id %}" class="btn btn-sm btn-warning">−</a>
+            <a href="{% url 'eliminar_producto' d.id %}" class="btn btn-sm btn-danger">🗑️</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5" class="text-center">
+            No hay productos en este pedido
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+
+            </table>
+        </div>
+
+        <h4 class="text-right mt-3">
+            Total: <strong>${{ total }}</strong>
+        </h4>
+    </div>
+</div>
+
+<a href="{% url 'dashboard' %}" class="btn btn-secondary">
+    ⬅ Volver al dashboard
+</a>
+
+{% endblock %}
