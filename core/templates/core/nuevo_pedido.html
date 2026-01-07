@@ -1,16 +1,20 @@
-{% extends 'core/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nuevo Pedido</title>
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+</head>
+<body>
+    <h1>Nuevo Pedido</h1>
 
-{% block content %}
-<h2>Nuevo Pedido</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label>Cliente:</label>
+        <input type="text" name="cliente" required>
+        <button type="submit">Crear Pedido</button>
+    </form>
 
-<form method="post">
-    {% csrf_token %}
-
-    {{ form.as_p }}
-
-    <button type="submit" class="btn btn-primary">
-        Guardar pedido
-    </button>
-</form>
-
-{% endblock %}
+    <a href="/">Volver</a>
+</body>
+</html>

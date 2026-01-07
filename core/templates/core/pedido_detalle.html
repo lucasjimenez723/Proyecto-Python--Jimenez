@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle del Pedido</title>
+</head>
+<body>
+    <h1>Pedido #{{ pedido.id }}</h1>
+
+    <p>Fecha: {{ pedido.fecha }}</p>
+
+    <a href="{% url 'dashboard' %}">⬅ Volver</a>
+</body>
+</html>
