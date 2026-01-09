@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Producto(models.Model):
     nombre = models.CharField(max_length=100)
     precio = models.DecimalField(max_digits=8, decimal_places=2)
@@ -10,25 +9,33 @@ class Producto(models.Model):
 
 
 class Pedido(models.Model):
-    cliente = models.CharField(max_length=100)
+    ESTADOS = (
+        ('pendiente', 'Pendiente'),
+        ('preparacion', 'En preparación'),
+        ('entregado', 'Entregado'),
+    )
+
     fecha = models.DateTimeField(auto_now_add=True)
+    estado = models.CharField(max_length=20, choices=ESTADOS, default='pendiente')
 
-    @property
     def total(self):
-        return sum(detalle.subtotal for detalle in self.detallepedido_set.all())
+        return sum(item.subtotal() for item in self.items.all())
 
     def __str__(self):
-        return f"Pedido #{self.id} - {self.cliente}"
+        return f"Pedido #{self.id}"
 
 
-class DetallePedido(models.Model):
-    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+class PedidoProducto(models.Model):
+    pedido = models.ForeignKey(
+        Pedido,
+        related_name='items',
+        on_delete=models.CASCADE
+    )
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    cantidad = models.PositiveIntegerField()
+    cantidad = models.PositiveIntegerField(default=1)
 
-    @property
     def subtotal(self):
-        return self.cantidad * self.producto.precio
+        return self.producto.precio * self.cantidad
 
     def __str__(self):
-        return f"{self.producto} x{self.cantidad}"
+        return f"{self.producto.nombre} x{self.cantidad}"

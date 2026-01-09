@@ -3,24 +3,19 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Sistema de Pedidos{% endblock %}</title>
+    <title>{% block title %}Restaurante{% endblock %}</title>
 
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+    <!-- CSS -->
+ 
+    <link href="{% static 'core/css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <link href="{% static 'core/css/style.css' %}" rel="stylesheet">
 </head>
 <body>
 
-<header>
-    <h1>Sistema de Gestión de Pedidos</h1>
-</header>
+    {% block content %}{% endblock %}
 
-<div class="container">
-    {% block content %}
-    {% endblock %}
-</div>
+    <!-- JS -->
 
-<footer>
-    Proyecto Final – :contentReference[oaicite:0]{index=0}
-</footer>
-
+    <script src="{% static 'core/js/sb-admin-2.min.js' %}"></script>
 </body>
 </html>

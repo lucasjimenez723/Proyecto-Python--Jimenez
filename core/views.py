@@ -1,52 +1,53 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Pedido, Producto, DetallePedido
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Pedido, Producto, PedidoProducto
 
-
-def home(request):
+def index(request):
     pedidos = Pedido.objects.all()
-    return render(request, 'core/home.html', {'pedidos': pedidos})
+    return render(request, 'core/index.html', {'pedidos': pedidos})
 
 
-def nuevo_pedido(request):
-    if request.method == 'POST':
-        cliente = request.POST.get('cliente')
-        pedido = Pedido.objects.create(cliente=cliente)
-        return redirect('agregar_producto', pedido_id=pedido.id)
-
-    return render(request, 'core/nuevo_pedido.html')
-
-
-def ver_pedido(request, pedido_id):
+def detalle_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
-    return render(request, 'core/ver_pedido.html', {
-        'pedido': pedido
-    })
-def pedido_detalle(request, pedido_id):
-    pedido = get_object_or_404(Pedido, id=pedido_id)
-    return render(request, 'core/pedido_detalle.html', {
-        'pedido': pedido
-    })
-
-def agregar_producto(request, pedido_id):
-    pedido = get_object_or_404(Pedido, id=pedido_id)
+    items = pedido.items.select_related('producto')
     productos = Producto.objects.all()
 
     if request.method == 'POST':
         producto_id = request.POST.get('producto')
-        cantidad = int(request.POST.get('cantidad'))
+        cantidad = int(request.POST.get('cantidad', 1))
 
         producto = get_object_or_404(Producto, id=producto_id)
-        DetallePedido.objects.create(
+
+        item, creado = PedidoProducto.objects.get_or_create(
             pedido=pedido,
-            producto=producto,
-            cantidad=cantidad
+            producto=producto
         )
-        return redirect('agregar_producto', pedido_id=pedido.id)
 
-    detalles = DetallePedido.objects.filter(pedido=pedido)
+        if not creado:
+            item.cantidad += cantidad
+        else:
+            item.cantidad = cantidad
 
-    return render(request, 'core/agregar_producto.html', {
+        item.save()
+        return redirect('detalle_pedido', pedido_id=pedido.id)
+
+    return render(request, 'core/detalle_pedido.html', {
         'pedido': pedido,
-        'productos': productos,
-        'detalles': detalles
+        'items': items,
+        'productos': productos
     })
+
+
+def eliminar_item(request, item_id):
+    item = get_object_or_404(PedidoProducto, id=item_id)
+    pedido_id = item.pedido.id
+    item.delete()
+    return redirect('detalle_pedido', pedido_id=pedido_id)
+
+
+def cambiar_estado(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    estados = ['pendiente', 'preparacion', 'entregado']
+    actual = estados.index(pedido.estado)
+    pedido.estado = estados[(actual + 1) % len(estados)]
+    pedido.save()
+    return redirect('detalle_pedido', pedido_id=pedido.id)

@@ -1,78 +1,29 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Agregar producto</title>
+{% extends "core/base.html" %}
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
-</head>
-<body>
+{% block content %}
+<h2>Agregar producto al pedido #{{ pedido.id }}</h2>
 
-<div class="container">
+<form method="post">
+    {% csrf_token %}
 
-    <h1>Pedido #{{ pedido.id }}</h1>
-    <p><strong>Cliente:</strong> {{ pedido.cliente }}</p>
+    <label>Producto:</label>
+    <select name="producto_id" required>
+        {% for producto in productos %}
+            <option value="{{ producto.id }}">
+                {{ producto.nombre }} - ${{ producto.precio }}
+            </option>
+        {% endfor %}
+    </select>
 
-    <hr>
+    <br><br>
 
-    <h2>Agregar producto</h2>
+    <label>Cantidad:</label>
+    <input type="number" name="cantidad" value="1" min="1" required>
 
-    <form method="post">
-        {% csrf_token %}
+    <br><br>
 
-        <label>Producto</label>
-        <select name="producto" required>
-            {% for producto in productos %}
-                <option value="{{ producto.id }}">
-                    {{ producto.nombre }} - ${{ producto.precio }}
-                </option>
-            {% endfor %}
-        </select>
+    <button type="submit">Agregar</button>
+</form>
 
-        <label>Cantidad</label>
-        <input type="number" name="cantidad" min="1" required>
-
-        <button type="submit">Agregar</button>
-    </form>
-
-    <hr>
-
-    <h2>Detalle del pedido</h2>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for d in detalles %}
-            <tr>
-                <td>{{ d.producto.nombre }}</td>
-                <td>{{ d.cantidad }}</td>
-                <td>${{ d.producto.precio }}</td>
-                <td>${{ d.subtotal }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No hay productos agregados</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <h3 class="total">
-        Total del pedido: ${{ pedido.total }}
-    </h3>
-
-    <a href="{% url 'home' %}" class="btn-volver">Volver al inicio</a>
-
-</div>
-
-</body>
-</html>
+<a href="{% url 'home' %}">⬅ Volver</a>
+{% endblock %}

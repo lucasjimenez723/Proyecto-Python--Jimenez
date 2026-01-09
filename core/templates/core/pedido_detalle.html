@@ -1,14 +1,72 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Detalle del Pedido</title>
+    <title>Pedido {{ pedido.id }}</title>
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
 </head>
 <body>
+
+<div class="container">
+
     <h1>Pedido #{{ pedido.id }}</h1>
 
-    <p>Fecha: {{ pedido.fecha }}</p>
+    <p>
+        Estado:
+        <span class="estado {{ pedido.estado }}">
+            {{ pedido.get_estado_display }}
+        </span>
+    </p>
 
-    <a href="{% url 'dashboard' %}">⬅ Volver</a>
+    <h2>Agregar producto</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <select name="producto" required>
+            <option value="">Seleccionar producto</option>
+            {% for producto in productos %}
+                <option value="{{ producto.id }}">
+                    {{ producto.nombre }} (${{ producto.precio }})
+                </option>
+            {% endfor %}
+        </select>
+
+        <input type="number" name="cantidad" min="1" value="1" required>
+
+        <button type="submit" class="btn">Agregar</button>
+    </form>
+
+    <h2>Productos del pedido</h2>
+
+    <ul>
+        {% for item in items %}
+            <li>
+                <div>
+                    {{ item.producto.nombre }}  
+                    x {{ item.cantidad }}  
+                    <strong>$ {{ item.subtotal }}</strong>
+                </div>
+
+                <div>
+                    <a href="{% url 'eliminar_item' item.id %}" class="btn btn-danger">
+                        Eliminar
+                    </a>
+                </div>
+            </li>
+        {% empty %}
+            <li>No hay productos en este pedido</li>
+        {% endfor %}
+    </ul>
+
+    <p class="total">
+        Total: ${{ pedido.total }}
+    </p>
+
+    <a href="{% url 'home' %}" class="volver">← Volver</a>
+
+</div>
+
 </body>
 </html>
