@@ -1,81 +1,64 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Detalle Pedido</title>
-    <link rel="stylesheet" href="{% static 'core/css/sb-admin-2.min.css' %}">
-</head>
-<body class="container mt-4">
+{% extends 'core/base.html' %}
 
+{% block title %}Detalle del pedido{% endblock %}
+
+{% block content %}
 <h2>Pedido #{{ pedido.id }}</h2>
-<p><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
 
-<a href="{% url 'cambiar_estado' pedido.id %}" class="btn btn-warning mb-3">
-    Cambiar estado
-</a>
+<h3>Agregar producto</h3>
 
-<hr>
-
-<h4>Agregar producto</h4>
-<form method="post" class="row g-2 mb-4">
+<form method="post">
     {% csrf_token %}
-    <div class="col-md-6">
-        <select name="producto" class="form-control" required>
-            {% for producto in productos %}
-                <option value="{{ producto.id }}">
-                    {{ producto.nombre }} - ${{ producto.precio }}
-                </option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="col-md-3">
-        <input type="number" name="cantidad" value="1" min="1" class="form-control">
-    </div>
-    <div class="col-md-3">
-        <button class="btn btn-primary w-100">Agregar</button>
-    </div>
+
+    <label>Producto</label>
+    <select name="producto" required>
+        {% for producto in productos %}
+            <option value="{{ producto.id }}">
+                {{ producto.nombre }} - ${{ producto.precio }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label>Cantidad</label>
+    <input type="number" name="cantidad" value="1" min="1" required>
+
+    <button type="submit">Agregar</button>
 </form>
 
 <hr>
 
-<h4>Productos del pedido</h4>
+<h3>Productos del pedido</h3>
 
 {% if items %}
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Producto</th>
-            <th>Cantidad</th>
-            <th>Precio</th>
-            <th>Subtotal</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in items %}
-        <tr>
-            <td>{{ item.producto.nombre }}</td>
-            <td>{{ item.cantidad }}</td>
-            <td>${{ item.producto.precio }}</td>
-            <td>${{ item.subtotal }}</td>
-            <td>
-                <a href="{% url 'eliminar_item' item.id %}" class="btn btn-danger btn-sm">
-                    Eliminar
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio unitario</th>
+                <th>Subtotal</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.producto.nombre }}</td>
+                <td>{{ item.cantidad }}</td>
+                <td>${{ item.producto.precio }}</td>
+                <td>${{ item.subtotal }}</td>
+                <td>
+                    <a href="{% url 'eliminar_item' item.id %}">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-<h4 class="text-end">Total: ${{ pedido.total }}</h4>
-
+    <h3>Total del pedido: ${{ total }}</h3>
 {% else %}
-<p>No hay productos en este pedido.</p>
+    <p>No hay productos en este pedido.</p>
 {% endif %}
 
-<a href="{% url 'index' %}" class="btn btn-secondary mt-3">Volver</a>
-
-</body>
-</html>
+<a href="{% url 'index' %}">Volver a pedidos</a>
+{% endblock %}

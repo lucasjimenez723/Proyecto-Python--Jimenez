@@ -1,21 +1,21 @@
 {% extends 'core/base.html' %}
-{% block title %}Pedidos{% endblock %}
+
+{% block title %}Mis pedidos{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1 class="h3 mb-4 text-gray-800">Pedidos</h1>
+<h2>Mis pedidos</h2>
 
-    {% for pedido in pedidos %}
-        <div class="card mb-3">
-            <div class="card-body d-flex justify-content-between">
-                <span>Pedido #{{ pedido.id }}</span>
-                <a href="{% url 'detalle_pedido' pedido.id %}" class="btn btn-primary btn-sm">
-                    Ver detalle
-                </a>
-            </div>
-        </div>
-    {% empty %}
-        <p>No hay pedidos</p>
-    {% endfor %}
-</div>
+{% if pedidos %}
+    <ul>
+        {% for pedido in pedidos %}
+            <li>
+                <strong>Pedido #{{ pedido.id }}</strong> |
+                Estado: {{ pedido.estado }} |
+                <a href="{% url 'detalle_pedido' pedido.id %}">Ver detalle</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No tenés pedidos creados.</p>
+{% endif %}
 {% endblock %}
