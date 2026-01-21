@@ -5,6 +5,9 @@ from .models import Pedido, Producto, PedidoProducto
 from django.contrib.auth.decorators import login_required
 from .forms import UserEditForm, PerfilForm 
 from .models import Perfil
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 
 @login_required
 def home(request):
@@ -90,3 +93,29 @@ def mi_perfil(request):
         'perfil': perfil, # Pasamos el perfil para mostrar el avatar actual
     }
     return render(request, 'core/perfil.html', context)
+
+
+class ProductoListView(ListView):
+    model = Producto
+    template_name = 'core/productos_list.html'
+    context_object_name = 'productos'
+
+
+class ProductoCreateView(LoginRequiredMixin, CreateView):
+    model = Producto
+    template_name = 'core/producto_form.html'
+    fields = ['nombre', 'precio', 'descripcion', 'imagen']
+    success_url = reverse_lazy('productos_list') 
+
+
+class ProductoUpdateView(LoginRequiredMixin, UpdateView):
+    model = Producto
+    template_name = 'core/producto_form.html'
+    fields = ['nombre', 'precio', 'descripcion', 'imagen']
+    success_url = reverse_lazy('productos_list')
+
+
+class ProductoDeleteView(LoginRequiredMixin, DeleteView):
+    model = Producto
+    template_name = 'core/producto_confirm_delete.html'
+    success_url = reverse_lazy('productos_list')

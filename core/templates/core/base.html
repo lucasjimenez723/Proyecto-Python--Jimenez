@@ -16,6 +16,9 @@
             {% if user.is_authenticated %}
                 <div class="menu-links" style="display: flex; gap: 15px;">
                     <a href="{% url 'home' %}" style="color: #e5e7eb; text-decoration: none;">Inicio</a>
+                    
+                    <a href="{% url 'productos_list' %}" style="color: #e5e7eb; text-decoration: none;">Menú</a>
+                    
                     <a href="{% url 'crear_pedido' %}" style="color: #e5e7eb; text-decoration: none;">Nuevo pedido</a>
                 </div>
             {% endif %}
