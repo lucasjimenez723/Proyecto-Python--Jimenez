@@ -1,19 +1,18 @@
 from django import forms
-from .models import Pedido
-from .models import DetallePedido
+from django.contrib.auth.models import User
+from .models import Perfil
 
-class PedidoForm(forms.ModelForm):
+# Formulario para editar datos básicos (Usuario, Email, Nombre)
+class UserEditForm(forms.ModelForm):
     class Meta:
-        model = Pedido
-        fields = ['cliente']
-        widgets = {
-            'cliente': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Nombre del cliente'
-            })
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        help_texts = {
+            'email': None, # Para quitar textos de ayuda molestos
         }
 
-class DetallePedidoForm(forms.ModelForm):
+# Formulario para editar datos extra (Avatar, Bio, Web)
+class PerfilForm(forms.ModelForm):
     class Meta:
-        model = DetallePedido
-        fields = ['producto', 'cantidad']
+        model = Perfil
+        fields = ['avatar', 'biografia', 'link']

@@ -1,64 +1,179 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Detalle del pedido{% endblock %}
-
 {% block content %}
-<h2>Pedido #{{ pedido.id }}</h2>
+<style>
+    .order-card {
+        background-color: #1f2937; /* Fondo gris oscuro (hace juego con tu navbar) */
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        padding: 2rem;
+        max-width: 800px; /* Ancho máximo para que no se estire en monitores grandes */
+        margin: 2rem auto; /* Centrado automático */
+        color: #f3f4f6; /* Texto claro */
+    }
 
-<h3>Agregar producto</h3>
+    /* Diseño del formulario en una sola línea */
+    .form-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 2rem;
+        align-items: flex-end; /* Alinea los inputs con el botón abajo */
+        background-color: #374151; /* Fondo ligeramente más claro para el área de input */
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
 
-<form method="post">
-    {% csrf_token %}
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
 
-    <label>Producto</label>
-    <select name="producto" required>
-        {% for producto in productos %}
-            <option value="{{ producto.id }}">
-                {{ producto.nombre }} - ${{ producto.precio }}
-            </option>
-        {% endfor %}
-    </select>
+    .form-label {
+        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
+        color: #9ca3af;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
 
-    <label>Cantidad</label>
-    <input type="number" name="cantidad" value="1" min="1" required>
+    .form-control {
+        padding: 0.6rem;
+        border-radius: 4px;
+        border: 1px solid #4b5563;
+        background-color: #1f2937;
+        color: white;
+        font-size: 1rem;
+    }
 
-    <button type="submit">Agregar</button>
-</form>
+    .btn-add {
+        background-color: #10b981; /* Verde esmeralda */
+        color: white;
+        padding: 0.6rem 1.5rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.2s;
+        height: fit-content;
+    }
 
-<hr>
+    .btn-add:hover { background-color: #059669; }
 
-<h3>Productos del pedido</h3>
+    /* Estilos de la Tabla */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
 
-{% if items %}
-    <table>
-        <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio unitario</th>
-                <th>Subtotal</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-            <tr>
-                <td>{{ item.producto.nombre }}</td>
-                <td>{{ item.cantidad }}</td>
-                <td>${{ item.producto.precio }}</td>
-                <td>${{ item.subtotal }}</td>
-                <td>
-                    <a href="{% url 'eliminar_item' item.id %}">Eliminar</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    th {
+        text-align: left;
+        padding: 1rem;
+        border-bottom: 2px solid #4b5563;
+        color: #9ca3af;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+    }
 
-    <h3>Total del pedido: ${{ total }}</h3>
-{% else %}
-    <p>No hay productos en este pedido.</p>
-{% endif %}
+    td {
+        padding: 1rem;
+        border-bottom: 1px solid #374151;
+        vertical-align: middle;
+    }
 
-<a href="{% url 'index' %}">Volver a pedidos</a>
+    .delete-btn {
+        color: #f87171; /* Rojo suave */
+        text-decoration: none;
+        font-size: 0.9rem;
+        border: 1px solid #f87171;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+    .delete-btn:hover {
+        background-color: #f87171;
+        color: white;
+    }
+
+    .total-section {
+        margin-top: 2rem;
+        text-align: right;
+        font-size: 1.5rem;
+        border-top: 2px solid #4b5563;
+        padding-top: 1rem;
+        color: #10b981; /* Verde para el dinero */
+    }
+</style>
+
+<div class="order-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="margin:0;">Pedido #{{ pedido.id }}</h2>
+        <span style="background: #374151; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; color: #9ca3af;">
+            {{ pedido.creado|date:"d M Y" }}
+        </span>
+    </div>
+
+    <form method="post" class="form-row">
+        {% csrf_token %}
+        
+        <div class="form-group" style="flex-grow: 1;">
+            <label class="form-label">Producto</label>
+            <select name="producto" class="form-control" required>
+                {% for producto in productos %}
+                    <option value="{{ producto.id }}">
+                        {{ producto.nombre }} (${{ producto.precio }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group" style="width: 100px;">
+            <label class="form-label">Cant.</label>
+            <input type="number" name="cantidad" min="1" value="1" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn-add">
+            + Agregar
+        </button>
+    </form>
+
+    <hr style="border: 0; border-top: 1px solid #374151; margin: 2rem 0;">
+
+    {% if items %}
+        <h3>Detalle de items</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th style="text-align: center;">Cantidad</th>
+                    <th>Subtotal</th>
+                    <th style="text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td style="font-weight: bold;">{{ item.producto.nombre }}</td>
+                    <td style="text-align: center;">{{ item.cantidad }}</td>
+                    <td style="color: #10b981;">${{ item.subtotal }}</td>
+                    <td style="text-align: right;">
+                        <a href="{% url 'eliminar_item' item.id %}" class="delete-btn">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            <small style="font-size: 0.9rem; color: #9ca3af; display:block;">Total Final</small>
+            ${{ total }}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 2rem; color: #9ca3af;">
+            <p>El carrito está vacío. ¡Agrega tu primer producto arriba!</p>
+        </div>
+    {% endif %}
+
+</div>
 {% endblock %}

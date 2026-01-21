@@ -3,30 +3,57 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Sistema de Pedidos{% endblock %}</title>
+    <title>{% block title %}Gestión de Pedidos{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
 </head>
 <body>
 
-<header>
-    <h1>Sistema de Gestión de Pedidos</h1>
+    <nav class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background-color: #1f2937; color: white;">
+        
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <span class="logo" style="font-weight: bold; font-size: 1.2rem; margin-right: 20px;">Gestión de Pedidos</span>
+            
+            {% if user.is_authenticated %}
+                <div class="menu-links" style="display: flex; gap: 15px;">
+                    <a href="{% url 'home' %}" style="color: #e5e7eb; text-decoration: none;">Inicio</a>
+                    <a href="{% url 'crear_pedido' %}" style="color: #e5e7eb; text-decoration: none;">Nuevo pedido</a>
+                </div>
+            {% endif %}
+        </div>
+    
+        <div class="user-actions" style="display: flex; align-items: center; gap: 15px;">
+            {% if user.is_authenticated %}
+                
+                <a href="{% url 'mi_perfil' %}" style="color: #10b981; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+                    {% if user.perfil.avatar %}
+                        <img src="{{ user.perfil.avatar.url }}" alt="Avatar" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 2px solid #10b981;">
+                    {% endif %}
+                    Mi Perfil
+                </a>
 
-    {% if user.is_authenticated %}
-        <nav>
-            <a href="{% url 'index' %}">Inicio</a>
-            <a href="{% url 'crear_pedido' %}">Nuevo pedido</a>
-            <a href="{% url 'login' %}">Cerrar sesión</a>
-        </nav>
-    {% endif %}
-</header>
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background-color: #dc2626; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                        Cerrar sesión
+                    </button>
+                </form>
 
-<main>
-    {% block content %}{% endblock %}
-</main>
+            {% else %}
+                <div style="display: flex; gap: 15px;">
+                    <a href="{% url 'login' %}" style="color: white; text-decoration: none;">Login</a>
+                    <a href="{% url 'registro' %}" style="color: white; text-decoration: none;">Registro</a>
+                </div>
+            {% endif %}
+        </div>
+    </nav>
 
-<footer>
-    <p>Proyecto Final - Python Django</p>
-</footer>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        Proyecto Final | Python Django
+    </footer>
 
 </body>
 </html>

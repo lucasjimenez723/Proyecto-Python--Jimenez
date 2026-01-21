@@ -1,222 +1,104 @@
-/* =========================
-   RESET + BASE
-========================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-:root {
-    --bg: #0f172a;
-    --card: #111827;
-    --primary: #22c55e;
-    --primary-hover: #16a34a;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-    --text: #e5e7eb;
-    --muted: #9ca3af;
-    --border: #1f2933;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    line-height: 1.6;
+    background: linear-gradient(135deg, #0f172a, #020617);
+    color: #e5e7eb;
+    min-height: 100vh;
 }
 
-/* =========================
-   LAYOUT
-========================= */
-.container {
+/* NAVBAR */
+.navbar {
+    background-color: #020617;
+    padding: 15px 0;
+    border-bottom: 1px solid #1e293b;
+}
+
+.nav-container {
+    width: 90%;
     max-width: 1100px;
     margin: auto;
-    padding: 2rem;
-}
-
-.card {
-    background: var(--card);
-    border-radius: 14px;
-    padding: 1.8rem;
-    box-shadow: 0 15px 30px rgba(0,0,0,.35);
-    margin-bottom: 2rem;
-    border: 1px solid var(--border);
-}
-
-/* =========================
-   HEADERS
-========================= */
-h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-}
-
-h2 {
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
-    color: var(--primary);
-}
-
-h3 {
-    font-size: 1.1rem;
-    margin-bottom: .8rem;
-    color: var(--muted);
-}
-
-/* =========================
-   PEDIDO INFO
-========================= */
-.pedido-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
 }
 
-.estado {
-    padding: .4rem .9rem;
-    border-radius: 999px;
-    font-size: .85rem;
-    font-weight: 600;
-}
-
-.estado.pendiente { background: rgba(245,158,11,.15); color: var(--warning); }
-.estado.preparando { background: rgba(34,197,94,.15); color: var(--primary); }
-.estado.entregado { background: rgba(59,130,246,.15); color: #60a5fa; }
-
-/* =========================
-   TABLE
-========================= */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-thead {
-    background: #020617;
-}
-
-th, td {
-    padding: .9rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-}
-
-th {
-    font-size: .85rem;
-    text-transform: uppercase;
-    color: var(--muted);
-}
-
-tbody tr:hover {
-    background: rgba(255,255,255,.02);
-}
-
-.total-row td {
+.logo {
+    font-size: 20px;
     font-weight: bold;
-    font-size: 1.1rem;
+    color: #22c55e;
 }
 
-/* =========================
-   FORMS
-========================= */
-form {
-    display: flex;
-    gap: .8rem;
-    flex-wrap: wrap;
-    margin-top: 1rem;
-}
-
-select, input {
-    background: #020617;
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: .6rem .8rem;
-    border-radius: 8px;
-    outline: none;
-}
-
-select:focus, input:focus {
-    border-color: var(--primary);
-}
-
-/* =========================
-   BUTTONS
-========================= */
-button, .btn {
-    background: var(--primary);
-    border: none;
-    color: #022c22;
-    padding: .6rem 1.1rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all .2s ease;
-}
-
-button:hover, .btn:hover {
-    background: var(--primary-hover);
-    transform: translateY(-1px);
-}
-
-.btn-danger {
-    background: var(--danger);
-    color: #fff;
-}
-
-.btn-danger:hover {
-    background: #dc2626;
-}
-
-.btn-outline {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text);
-}
-
-.btn-outline:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-/* =========================
-   EMPTY STATE
-========================= */
-.empty {
-    text-align: center;
-    padding: 2rem;
-    color: var(--muted);
-    font-size: .95rem;
-}
-
-/* =========================
-   LINKS
-========================= */
-a {
-    color: var(--primary);
+.nav-links a {
+    color: #e5e7eb;
+    margin-left: 15px;
     text-decoration: none;
+    font-weight: 500;
 }
 
-a:hover {
-    text-decoration: underline;
+.nav-links a:hover {
+    color: #22c55e;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 768px) {
-    .pedido-info {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    table {
-        font-size: .9rem;
-    }
+/* CONTENIDO */
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: 40px auto;
 }
-.estado-pendiente { background: orange; }
-.estado-preparacion { background: dodgerblue; }
-.estado-entregado { background: #22c55e; }
+
+/* TITULOS */
+h1, h2 {
+    margin-bottom: 20px;
+    color: #22c55e;
+}
+
+/* TARJETAS */
+.card {
+    background-color: #020617;
+    border: 1px solid #1e293b;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.card a {
+    color: #22c55e;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* FORMULARIOS */
+form div {
+    margin-bottom: 15px;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+}
+
+button {
+    background-color: #22c55e;
+    color: #020617;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #16a34a;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: #9ca3af;
+}

@@ -2,12 +2,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Pedido, Producto, PedidoProducto
-
+from django.contrib.auth.decorators import login_required
+from .forms import UserEditForm, PerfilForm 
+from .models import Perfil
 
 @login_required
-def index(request):
+def home(request):
     pedidos = Pedido.objects.filter(cliente=request.user)
-    return render(request, 'core/index.html', {'pedidos': pedidos})
+    return render(request, 'core/home.html', {'pedidos': pedidos})
 
 
 @login_required
@@ -33,7 +35,6 @@ def detalle_pedido(request, pedido_id):
             producto=producto,
             cantidad=cantidad
         )
-
         return redirect('detalle_pedido', pedido.id)
 
     total = sum(item.subtotal() for item in items)
@@ -61,5 +62,31 @@ def registro(request):
             password=request.POST['password']
         )
         return redirect('login')
-
     return render(request, 'core/registro.html')
+
+@login_required
+def mi_perfil(request):
+    # Aseguramos que el usuario tenga un perfil creado (por si es un usuario viejo)
+    perfil, created = Perfil.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        # Cargamos los datos enviados en ambos formularios
+        user_form = UserEditForm(request.POST, instance=request.user)
+        perfil_form = PerfilForm(request.POST, request.FILES, instance=perfil)
+
+        if user_form.is_valid() and perfil_form.is_valid():
+            user_form.save()
+            perfil_form.save()
+            # Redirigimos a la misma página para ver los cambios
+            return redirect('mi_perfil')
+    else:
+        # Si es GET, mostramos los formularios con los datos actuales
+        user_form = UserEditForm(instance=request.user)
+        perfil_form = PerfilForm(instance=perfil)
+
+    context = {
+        'user_form': user_form,
+        'perfil_form': perfil_form,
+        'perfil': perfil, # Pasamos el perfil para mostrar el avatar actual
+    }
+    return render(request, 'core/perfil.html', context)
