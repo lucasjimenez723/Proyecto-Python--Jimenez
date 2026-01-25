@@ -1,18 +1,31 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Perfil
+from django.contrib.auth.forms import UserCreationForm
+from .models import Perfil, Producto
 
-# Formulario para editar datos básicos (Usuario, Email, Nombre)
+# --- FORMULARIO DE REGISTRO MEJORADO (Nombre, Apellido, Email) ---
+class RegistroUsuarioForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+        help_texts = {
+            'username': None, 
+        }
+
+# --- FORMULARIOS DE PERFIL ---
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
-        help_texts = {
-            'email': None, # Para quitar textos de ayuda molestos
-        }
+        help_texts = { 'email': None }
 
-# Formulario para editar datos extra (Avatar, Bio, Web)
 class PerfilForm(forms.ModelForm):
     class Meta:
         model = Perfil
         fields = ['avatar', 'biografia', 'link']
+
+# --- FORMULARIO PARA PRODUCTOS (Usado en el CRUD) ---
+class ProductoForm(forms.ModelForm):
+    class Meta:
+        model = Producto
+        fields = ['nombre', 'precio', 'descripcion', 'imagen']

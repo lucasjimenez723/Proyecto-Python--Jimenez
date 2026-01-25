@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 3rem auto; background-color: #1f2937; color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 30px;">
+    
+    <div style="flex-shrink: 0;">
+        <div style="width: 150px; height: 150px; background-color: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: bold;">
+            Yo
+        </div>
+    </div>
+
+    <div>
+        <h1 style="color: #10b981; margin-top: 0;">Acerca de mí</h1>
+        <p style="font-size: 1.1rem; line-height: 1.6; color: #d1d5db;">
+            ¡Hola! Soy estudiante de programación y este es mi proyecto final para el curso de Python y Django.
+        </p>
+        <p style="font-size: 1.1rem; line-height: 1.6; color: #d1d5db;">
+            Esta aplicación permite gestionar pedidos de un restaurante, administrar un menú dinámico y gestionar perfiles de usuario.
+            Fue construida utilizando tecnologías como:
+        </p>
+        <ul style="color: #9ca3af; margin-top: 10px;">
+            <li>Python & Django</li>
+            <li>HTML5 & CSS3</li>
+            <li>SQLite</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

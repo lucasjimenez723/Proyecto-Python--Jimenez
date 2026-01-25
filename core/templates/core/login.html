@@ -1,18 +1,47 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Iniciar Sesión{% endblock %}
 
 {% block content %}
-<h2>Iniciar sesión</h2>
+<div style="max-width: 400px; margin: 3rem auto; background: #1f2937; padding: 2rem; border-radius: 10px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+    <h2 style="text-align: center; color: #10b981; margin-bottom: 20px;">Iniciar Sesión</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group-auto">
+            {{ form.as_p }}
+        </div>
+        
+        <button type="submit" style="width: 100%; background-color: #10b981; color: white; padding: 12px; border: none; border-radius: 5px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 1rem;">
+            Ingresar
+        </button>
+    </form>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Ingresar</button>
-</form>
+    <p style="text-align: center; margin-top: 1.5rem; color: #9ca3af; font-size: 0.9rem;">
+        ¿No tenés cuenta? <a href="{% url 'registro' %}" style="color: #60a5fa; text-decoration: none;">Registrate aquí</a>
+    </p>
+</div>
 
-<p>
-    ¿No tenés cuenta?
-    <a href="{% url 'registro' %}">Registrate</a>
-</p>
+<style>
+    .form-group-auto p {
+        margin-bottom: 15px;
+    }
+    .form-group-auto label {
+        display: block;
+        color: #9ca3af;
+        margin-bottom: 5px;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+    .form-group-auto input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #4b5563;
+        background-color: #374151;
+        color: white;
+        box-sizing: border-box;
+    }
+</style>
 {% endblock %}
