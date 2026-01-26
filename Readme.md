@@ -55,6 +55,7 @@ python3 -m venv venv
 source venv/bin/activate
 
 ### 3. Instalar dependencias
+pip install django-ckeditor
 pip install -r requirements.txt
 
 ### 4. Aplicar migraciones
