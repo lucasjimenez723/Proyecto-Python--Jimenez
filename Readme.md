@@ -2,12 +2,6 @@
 
 Sistema web desarrollado con **Django** para la gestión de pedidos de un restaurante. Permite a los clientes registrarse, personalizar su perfil y realizar pedidos, mientras que los administradores gestionan el menú de forma dinámica y segura.
 
-## 📹 Video de Demostración
-
-Puedes ver un recorrido completo por las funcionalidades del sistema (Registro, CRUD de productos, Pedidos y Perfil) en el siguiente enlace:
-
-👉 **[Ver Demo en Loom / YouTube](AQUI_PONES_TU_LINK)**
-
 ---
 
 ## 🚀 Funcionalidades Principales
